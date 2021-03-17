@@ -24,6 +24,8 @@ declare module 'wmr' {
 		configResolved?: (config: Options) => Partial<Options>;
 	}
 
+	export type WMRPluginFactory = (options: Options) => WMRPlugin | WMRPlugin[];
+
 	export interface Options {
 		prod: boolean;
 		minify: boolean;

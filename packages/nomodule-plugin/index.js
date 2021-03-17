@@ -1,9 +1,12 @@
 import babel from '@babel/standalone';
 
-/** @param {import('../../types').Options} options */
+/**
+ * @param {import('../wmr/types').Options} options
+ * @returns {import('../wmr/types').WMRPlugin[]}
+ */
 export default function (options) {
 	if (options.mode && options.mode !== 'build') return;
-	options.plugins.push(nomodulePlugin({}));
+	return [nomodulePlugin({})];
 }
 
 /**
