@@ -32,6 +32,8 @@ declare module 'wmr' {
 		output: OutputOption[];
 		features: Features;
 	}
+
+	export function normalizePath(path: string): string;
 }
 
 // Declarations used by WMR-based applications

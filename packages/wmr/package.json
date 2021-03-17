@@ -2,6 +2,7 @@
 	"name": "wmr",
 	"version": "1.3.2",
 	"bin": "wmr.cjs",
+	"main": "./src/index.js",
 	"type": "module",
 	"scripts": {
 		"demo": "cd demo && node --experimental-modules ../src/cli.js 2>&1",

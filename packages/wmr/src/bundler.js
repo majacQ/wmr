@@ -1,9 +1,10 @@
-import { relative, sep, posix, resolve, dirname } from 'path';
+import { relative, posix, resolve, dirname } from 'path';
 import * as rollup from 'rollup';
 import htmPlugin from './plugins/htm-plugin.js';
 import sucrasePlugin from './plugins/sucrase-plugin.js';
 import wmrPlugin from './plugins/wmr/plugin.js';
 import wmrStylesPlugin from './plugins/wmr/styles-plugin.js';
+import { normalizePath } from './utils.js';
 import sassPlugin from './plugins/sass-plugin.js';
 import terser from './plugins/fast-minify.js';
 import npmPlugin from './plugins/npm-plugin/index.js';
@@ -23,9 +24,6 @@ import externalUrlsPlugin from './plugins/external-urls-plugin.js';
 import copyAssetsPlugin from './plugins/copy-assets-plugin.js';
 import nodeBuiltinsPlugin from './plugins/node-builtins-plugin.js';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
-
-/** @param {string} p */
-const pathToPosix = p => p.split(sep).join(posix.sep);
 
 /** @typedef {import('rollup').OutputOptions} OutputOptions */
 /** @typedef {OutputOptions | ((opts: OutputOptions) => OutputOptions)} Output */
@@ -84,7 +82,7 @@ export async function bundleProd({
 	await totalist(cwd, (rel, abs) => {
 		if (ignore.test(abs)) return;
 		if (!/\.html?/.test(rel)) return;
-		input.push('./' + pathToPosix(relative(root, abs)));
+		input.push('./' + normalizePath(relative(root, abs)));
 	});
 
 	const bundle = await rollup.rollup({
@@ -150,7 +148,7 @@ export async function bundleProd({
 		plugins: [minify && terser({ compress: true, sourcemap })],
 		sourcemap,
 		sourcemapPathTransform(p, mapPath) {
-			let url = pathToPosix(relative(cwd, resolve(dirname(mapPath), p)));
+			let url = normalizePath(relative(cwd, resolve(dirname(mapPath), p)));
 			// strip leading relative path
 			url = url.replace(/^\.\//g, '');
 			// replace internal npm prefix
