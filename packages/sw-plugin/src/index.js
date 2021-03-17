@@ -68,13 +68,14 @@ export default function swPlugin(options) {
 			// In development, we bundle to IIFE via Rollup, but use WMR's HTTP server to transpile dependencies:
 			id = path.resolve(options.cwd, id.slice(4));
 
+			let rollup;
 			try {
-				var { rollup } = await import('rollup');
+				// eslint-disable-next-line no-unused-vars
+				rollup = (await import('rollup')).rollup;
 			} catch (e) {
-				console.error(
-					(e = 'Error: Service Worker compilation requires that you install Rollup:\n  npm i --save-dev rollup')
-				);
-				return `export default null; throw ${JSON.stringify(e)};`;
+				const msg = 'Error: Service Worker compilation requires that you install Rollup:\n  npm i --save-dev rollup';
+				console.error(msg);
+				return `export default null; throw ${JSON.stringify(msg)};`;
 			}
 
 			const bundle = await rollup({
