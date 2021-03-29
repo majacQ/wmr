@@ -1,58 +1,35 @@
 import { LocationProvider, Router } from './lib/loc.js';
 import lazy, { ErrorBoundary } from './lib/lazy.js';
 import hydrate from './lib/hydrate';
-import Home from './pages/home.js';
+// import Home from './pages/home.js';
 // import About from './pages/about/index.js';
-import NotFound from './pages/_404.js';
-import Header from './header.tsx';
+// import NotFound from './pages/_404.js';
+import { JSONView } from './pages/json.js';
 // import './style.css';
 
-const About = lazy(() => import('./pages/about/index.js'));
-const LazyAndLate = lazy(
-	() =>
-		new Promise(r => {
-			setTimeout(() => {
-				r(import('./pages/about/index.js'));
-			}, 1.5e3);
-		})
-);
-const CompatPage = lazy(() => import('./pages/compat.js'));
-const ClassFields = lazy(() => import('./pages/class-fields.js'));
-const Files = lazy(() => import('./pages/files/index.js'));
-const Environment = lazy(async () => (await import('./pages/environment/index.js')).Environment);
-const JSONView = lazy(async () => (await import('./pages/json.js')).JSONView);
-
-export function App() {
-	return (
-		<LocationProvider>
-			<div class="app">
-				<Header />
-				<ErrorBoundary>
-					<Router>
-						<Home path="/" />
-						<About path="/about" />
-						<LazyAndLate path="/lazy-and-late" title={'Lazy and Late'} />
-						<CompatPage path="/compat" />
-						<ClassFields path="/class-fields" />
-						<Files path="/files" />
-						<Environment path="/env" />
-						<JSONView path="/json" />
-						<NotFound default />
-					</Router>
-				</ErrorBoundary>
-			</div>
-		</LocationProvider>
-	);
-}
+// const About = lazy(() => import('./pages/about/index.js'));
+// const LazyAndLate = lazy(
+// 	() =>
+// 		new Promise(r => {
+// 			setTimeout(() => {
+// 				r(import('./pages/about/index.js'));
+// 			}, 1.5e3);
+// 		})
+// );
+// const CompatPage = lazy(() => import('./pages/compat.js'));
+// const ClassFields = lazy(() => import('./pages/class-fields.js'));
+// const Files = lazy(() => import('./pages/files/index.js'));
+// const Environment = lazy(async () => (await import('./pages/environment/index.js')).Environment);
+// const JSONView = lazy(async () => (await import('./pages/json.js')).JSONView);
 
 if (typeof window !== 'undefined') {
-	hydrate(<App />, document.body);
+	hydrate(<JSONView />, document.body);
 }
 
 export async function prerender(data) {
 	const { prerender } = await import('./lib/prerender.js');
-	return await prerender(<App {...data} />);
+	return await prerender(<JSONView {...data} />);
 }
 
 // @ts-ignore
-if (module.hot) module.hot.accept(u => hydrate(<u.module.App />, document.body));
+if (module.hot) module.hot.accept(u => hydrate(<u.module.JSONView />, document.body));

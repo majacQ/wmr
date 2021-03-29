@@ -141,6 +141,7 @@ export default function wmrMiddleware(options) {
 			prefix = '\0' + prefixMatches[1] + ':';
 			path = prefixMatches[2];
 		}
+		console.log('PREFIX', JSON.stringify(prefix));
 
 		// convert to OS path:
 		const osPath = path.slice(1).split(posix.sep).join(sep);
@@ -185,6 +186,7 @@ export default function wmrMiddleware(options) {
 		try {
 			const start = Date.now();
 			const result = await transform(ctx);
+			// console.log(result);
 
 			// return false to skip handling:
 			if (result === false) return next();

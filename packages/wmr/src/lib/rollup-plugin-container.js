@@ -270,6 +270,7 @@ export function createPluginContainer(plugins, opts = {}) {
 		 * @param {string} id
 		 */
 		async transform(code, id) {
+			console.log('>>> CONTAINER', JSON.stringify(id));
 			for (plugin of plugins) {
 				if (!plugin.transform) continue;
 				const result = await plugin.transform.call(ctx, code, id);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import json from './foo.json';
+import json from 'my-json:./foo.json';
 
 export function JSONView() {
 	const [fetched, setFetched] = useState(null);
