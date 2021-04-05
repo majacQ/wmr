@@ -63,6 +63,12 @@ declare module 'wmr' {
 		/** @hidden Internal use only, don't use this */
 		onChange?: (event: ChangeEvent) => void;
 	}
+
+	export type ConfigResult = void | Partial<Options> | Plugin | Plugin[];
+
+	export function defineConfig(
+		options: Partial<Options> | ((options: Options) => ConfigResult | Promise<ConfigResult>)
+	): (options: Options) => Promise<ConfigResult>;
 }
 
 // Declarations used by WMR-based applications

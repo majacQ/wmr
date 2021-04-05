@@ -1,5 +1,6 @@
 import tmp from 'tmp-promise';
 import path from 'path';
+import { promises as fs } from 'fs';
 import ncpCb from 'ncp';
 import childProcess from 'child_process';
 import { promisify } from 'util';
@@ -50,6 +51,18 @@ export async function teardown(env) {
 export async function loadFixture(name, env) {
 	const fixture = path.join(__dirname, 'fixtures', name);
 	await ncp(fixture, env.tmp.path);
+	// For as long as the main "wmr" entry is self contained we
+	// can just copy it to the tmp dir
+	await ncp(path.join(__dirname, '..', 'src', 'index.js'), path.join(env.tmp.path, 'wmr-main.mjs'));
+	const configFiles = ['wmr.config.js', 'wmr.config.mjs', 'wmr.config.ts'];
+	for (const config of configFiles) {
+		try {
+			const configPath = path.join(env.tmp.path, config);
+			let content = await fs.readFile(configPath, 'utf-8');
+			content = content.replace(/from\s['"]wmr['"]/g, 'from "./wmr-main.mjs";');
+			await fs.writeFile(configPath, content, 'utf-8');
+		} catch (err) {}
+	}
 }
 
 /**
