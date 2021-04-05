@@ -53,7 +53,7 @@ export async function loadFixture(name, env) {
 	await ncp(fixture, env.tmp.path);
 	// For as long as the main "wmr" entry is self contained we
 	// can just copy it to the tmp dir
-	await ncp(path.join(__dirname, '..', 'src', 'index.js'), path.join(env.tmp.path, 'wmr-main.mjs'));
+	await ncp(path.join(__dirname, '..', 'index.js'), path.join(env.tmp.path, 'wmr-main.mjs'));
 	const configFiles = ['wmr.config.js', 'wmr.config.mjs', 'wmr.config.ts'];
 	for (const config of configFiles) {
 		try {
