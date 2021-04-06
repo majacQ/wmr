@@ -51,18 +51,14 @@ export async function teardown(env) {
 export async function loadFixture(name, env) {
 	const fixture = path.join(__dirname, 'fixtures', name);
 	await ncp(fixture, env.tmp.path);
-	// For as long as the main "wmr" entry is self contained we
-	// can just copy it to the tmp dir
-	await ncp(path.join(__dirname, '..', 'index.js'), path.join(env.tmp.path, 'wmr-main.mjs'));
-	const configFiles = ['wmr.config.js', 'wmr.config.mjs', 'wmr.config.ts'];
-	for (const config of configFiles) {
-		try {
-			const configPath = path.join(env.tmp.path, config);
-			let content = await fs.readFile(configPath, 'utf-8');
-			content = content.replace(/from\s['"]wmr['"]/g, 'from "./wmr-main.mjs";');
-			await fs.writeFile(configPath, content, 'utf-8');
-		} catch (err) {}
+	try {
+		await fs.mkdir(path.join(env.tmp.path, 'node_modules'));
+	} catch (err) {
+		if (!/EEXIST/.test(err.message)) {
+			throw err;
+		}
 	}
+	await fs.symlink(path.join(__dirname, '..'), path.join(env.tmp.path, 'node_modules', 'wmr'));
 }
 
 /**
